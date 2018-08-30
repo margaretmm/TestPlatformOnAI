@@ -11,6 +11,7 @@ https://github.com/margaretmm/TestPlatformOnAI/issues/4
 
 使用场景举例:
   比如产品GUI界面是否黑屏, 场景很多,窗口很多, 如果出现黑屏,或者黑屏出现在多个窗口中的任意一个位置, 我们都需要能识别出来自动保存统计结果, 减少人工检查界面的
+  识别效果示意: https://github.com/margaretmm/TestPlatformOnAI/issues/6
   
   
 
