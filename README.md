@@ -33,7 +33,8 @@ https://github.com/margaretmm/TestPlatformOnAI/issues/4
   
 ----识别效果示意:
 https://github.com/margaretmm/TestPlatformOnAI/issues/6
+识别效率还比较高, 基本上每张图片不用一秒给出判断结果
   
-  Server平台端代码只提供了图像识别功能部分代码
+  ()Server平台端代码只提供了图像识别功能部分代码)
 
 
