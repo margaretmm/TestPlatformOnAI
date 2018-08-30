@@ -11,7 +11,7 @@ https://github.com/margaretmm/TestPlatformOnAI/issues/4
 
 
 2.在线图像识别测试平台	
-   2.1.	Web服务器使用Tomcat+sprintBoot
+   2.1.	Web服务器使用Tomcat+sprintBoot(比较通用,代码没有提供)
    2.2.	算法调度模块主要是用于选择哪种识别算法(目前只支持一种模型)
    2.3.	图像识别子模块: 使用Java版本的TensorFlow 解析训练好的模型, 用于识别SUT端传输过来的图片, 是否有黑屏异常出现, 识别效果通过准确率来判断是否是合理
 
