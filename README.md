@@ -34,6 +34,6 @@ https://github.com/margaretmm/TestPlatformOnAI/issues/4
 ----识别效果示意:
 https://github.com/margaretmm/TestPlatformOnAI/issues/6
   
-  
+  Server平台端代码只提供了图像识别功能部分代码
 
 
