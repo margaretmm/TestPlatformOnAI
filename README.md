@@ -4,6 +4,8 @@ https://github.com/margaretmm/TestPlatformOnAI/issues/4
 
 
 模块&功能描述
+
+
 1离线学习模块	使用Tensorflow python版本,基于Inception4 网络做迁移学习;
              离线训练阶段需要准备很多正常,和各种黑屏场景的图片训练我们新的模型
              
