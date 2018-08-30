@@ -4,7 +4,6 @@
 """
 import glob
 import os.path
-import platform
 import random
 import numpy as np
 import tensorflow as tf
@@ -227,8 +226,11 @@ def create_inception_graph():
         with gfile.FastGFile(model_filename, 'rb') as f:
             graph_def = tf.GraphDef()
             graph_def.ParseFromString(f.read())
+
+            #print("graph_def:",graph_def)
             bottleneck_tensor, jpeg_data_tensor = tf.import_graph_def(graph_def, name='', return_elements=[
                 BOTTLENECK_TENSOR_NAME, JPEG_DATA_TENSOR_NAME])
+            #print("JPEG_DATA_TENSOR_NAME",jpeg_data_tensor)
     return graph, bottleneck_tensor, jpeg_data_tensor
 
 
@@ -266,7 +268,7 @@ def train(_):
     with tf.Session(graph=graph) as sess:
         train_step, evaluation_step, cross_entropy_mean, bottleneck_input, ground_truth_input = add_final_training_ops(
             n_classes, bottleneck_tensor)
-
+        print("~~new graph_def:", sess.graph_def)
         # 初始化参数
         init = tf.global_variables_initializer()
         sess.run(init)
@@ -298,6 +300,14 @@ def train(_):
         test_accuracy = sess.run(evaluation_step,
                                  feed_dict={bottleneck_input: test_bottlenecks, ground_truth_input: test_ground_truth})
         print('Final test accuracy = %.1f%%' % (test_accuracy * 100))
+
+        # 保存标签
+        output_labels = os.path.join(gDir.TRAINED_MODEL_DIR, 'labels.txt')
+        with tf.gfile.FastGFile(output_labels, 'w') as f:
+            keys = list(image_lists.keys())
+            for i in range(len(keys)):
+                keys[i] = '%2d -> %s' % (i, keys[i])
+            f.write('\n'.join(keys) + '\n')
 
         constant_graph = graph_util.convert_variables_to_constants(sess, sess.graph_def, ["output/prob"])
         with tf.gfile.FastGFile(gDir.TRAINED_MODEL_DIR+gDir.MODEL_FILE_new, mode='wb') as f:
