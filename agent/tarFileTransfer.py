@@ -4,13 +4,15 @@ import os
 import datetime
 import tarfile
 import fnmatch
-from queue import Queue
 from PIL import ImageGrab
 import time
 import schedule
 import threading
 import logging
 import logging.config
+
+from inceptionV3.agent.Enum import TransferType_Enum
+from inceptionV3.agent.activemq import actvieMQ
 
 log_filename = "screenAgent.log"
 logging.basicConfig(level=logging.DEBUG,
@@ -20,6 +22,8 @@ logging.basicConfig(level=logging.DEBUG,
 
 gFileDir = ".\\test\\"
 gRarDir = ".\\"
+gMQIP='10.66.206.64'
+gQueue_name = 'prediction.mq.queue'
 
 #pip install -i https://pypi.doubanio.com/simple/  schedule
 class tarFileTransfer():
@@ -59,7 +63,7 @@ class tarFileTransfer():
                         #print(filename)
                         yield os.path.join(root, filename)
 
-    def cre_tarfile(self,fileDir):
+    def create_tarfile(self,fileDir,type=TransferType_Enum.http.name):
         args = ["*.jpg", "*.jepg"]
         if self.count_file(fileDir)==0:
             return
@@ -80,19 +84,32 @@ class tarFileTransfer():
             if (count>=5):
                 logging.error("sent file retry times is >5 ")
                 break;
-            ret=self.tarSend(self.desIP,self.desPort,gRarDir+filename)
+            if (type == TransferType_Enum.http.name):
+                ret=self.tarSend(self.desIP,self.desPort,gRarDir+filename)
+            elif(type == TransferType_Enum.mq.name):
+                ret=self.tarSendByMq(gRarDir+filename)
+            else:
+                print("!!!!!transfer type invalid!!!!")
+
             if 0==ret:
                 #删除已经打包的图片文件
                 self.del_file(gFileDir)
             count+=1
         return
 
+    def tarSendByMq(self,rarFile):
+        mq=actvieMQ(gQueue_name)
+        mq.send_to_queue(rarFile);
+        return 0
+
+
+
     def tarSend(self,desIP,desPort,rarFile):
         url = 'http://'+ desIP +':'+str(desPort)
         print(rarFile)
         files = {'file': open(rarFile, 'rb')}
-        return 0
-        '''
+        #return 0
+
         try:
             r = requests.post(url, files=files)
             r.raise_for_status()
@@ -105,7 +122,7 @@ class tarFileTransfer():
             result = r.json()
             print(type(result), result, sep='\n')
             return 2
-        '''
+
 
 def run_threaded(job_func):
     job_thread = threading.Thread(target=job_func)
@@ -114,12 +131,14 @@ def run_threaded(job_func):
 if __name__ == "__main__":
     a = tarFileTransfer('127.0.0.1','8080')
 
-    schedule.every(50).seconds.do(a.imgCrab)
+    # schedule.every(8).seconds.do(a.imgCrab)
+    #
+    # schedule.every(1).minutes.do(a.create_tarfile,gFileDir,TransferType_Enum.mq.name)
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)
 
-    schedule.every(3).minutes.do(a.cre_tarfile,gFileDir)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    a.create_tarfile(gFileDir, type=TransferType_Enum.mq.name)
     '''
     t1 = threading.Thread(target=a.imgCrabIimer, args=(1,))
     t1.start()
