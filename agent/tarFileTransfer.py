@@ -131,14 +131,14 @@ def run_threaded(job_func):
 if __name__ == "__main__":
     a = tarFileTransfer('127.0.0.1','8080')
 
-    # schedule.every(8).seconds.do(a.imgCrab)
-    #
-    # schedule.every(1).minutes.do(a.create_tarfile,gFileDir,TransferType_Enum.mq.name)
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    schedule.every(8).seconds.do(a.imgCrab)
+    
+    schedule.every(1).minutes.do(a.create_tarfile,gFileDir,TransferType_Enum.mq.name)
+    while True:
+         schedule.run_pending()
+         time.sleep(1)
 
-    a.create_tarfile(gFileDir, type=TransferType_Enum.mq.name)
+    #a.create_tarfile(gFileDir, type=TransferType_Enum.mq.name)
     '''
     t1 = threading.Thread(target=a.imgCrabIimer, args=(1,))
     t1.start()
