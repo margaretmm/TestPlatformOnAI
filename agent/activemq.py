@@ -28,7 +28,14 @@ class ActiveMq(object):
         conn.connect()
         conn.send(self.queue_name, msg)
         conn.disconnect()
-
+        
+    # 推送到队列queue
+    def send_to_queue_typeBytes(self,size,content):
+        conn = stomp.Connection10(self.mq)
+        conn.start()
+        conn.connect()
+        conn.send(self.queue_name ,content, headers={"content-length":size})
+        conn.disconnect()
 
     # 推送到主题
     def send_to_topic(self,msg):
