@@ -6,10 +6,10 @@ import glob
 import os.path
 import random
 import numpy as np
+import dirDef as gDir
 import tensorflow as tf
 from tensorflow.python.platform import gfile
 from tensorflow.python.framework import graph_util
-import inceptionV3.dirDef as gDir
 
 # inception-v3 模型瓶颈层的节点个数
 BOTTLENECK_TENSOR_SIZE = 2048
